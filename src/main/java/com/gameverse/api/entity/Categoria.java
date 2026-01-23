@@ -24,10 +24,12 @@ public class Categoria {
 
     // Esto deriva en la Tabla Intermedia (TI1)
     @ManyToMany(mappedBy = "listCategorias")
-    private List<Juego> listJuegos ;
+    private List<Juego> listJuegos = new ArrayList<>();
 
 
-    public Categoria(){}
+    public Categoria() {
+        // Constructor vacío requerido por JPA
+    }
 
     public Categoria(String nombre){
         this.nombre = nombre;
@@ -35,7 +37,9 @@ public class Categoria {
 
     public Categoria(String nombre, List<Juego> listJuegos) {
         this.nombre = nombre;
-        this.listJuegos = listJuegos;
+        if (listJuegos != null) {
+            this.listJuegos = listJuegos;
+        }
     }
 
     public Long getId() {
@@ -54,7 +58,20 @@ public class Categoria {
         return this.listJuegos;
     }
 
-    public void setListJuegos(Juego juego) {
-        listJuegos.add(juego);
+    public void addJuego(Juego juego) {
+        this.listJuegos.add(juego);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Categoria)) return false;
+        Categoria other = (Categoria) o;
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

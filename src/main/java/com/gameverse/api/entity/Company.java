@@ -25,13 +25,14 @@ public class Company {
     // Dentro de Company.java
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private List<Juego> listJuegos;
+    private List<Juego> listJuegos = new ArrayList<>();
 
-    public Company() {}
+    public Company() {
+        // Constructor vacío requerido por JPA
+    }
 
     public Company(String nombre) {
         this.nombre = nombre;
-        this.listJuegos = new ArrayList<>();
     }
 
     public Long getId() {
@@ -42,7 +43,7 @@ public class Company {
         return this.nombre;
     }
 
-    public List getlistJuegos() {
+    public List<Juego> getListJuegos() {
         return this.listJuegos;
     }
 
@@ -50,7 +51,21 @@ public class Company {
         this.nombre = nombre;
     }
 
-    public void setListJuegos(Juego juego){
+    public void addJuego(Juego juego) {
         this.listJuegos.add(juego);
+        juego.setCompany(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Company)) return false;
+        Company other = (Company) o;
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
