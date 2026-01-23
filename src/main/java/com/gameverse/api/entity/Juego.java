@@ -2,6 +2,7 @@ package com.gameverse.api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class Juego {
             nullable = false)
     private String nombre;
 
-    @Column
+    @Column(nullable = true)
     private String descripcion;
 
     @Column(nullable = false)
@@ -30,18 +31,36 @@ public class Juego {
     @JoinColumn(name ="id_company", referencedColumnName = "id")
     private Company company;
 
+    // Dentro de Juego.java
+
+    @ManyToMany // Un juego tiene muchas categorías, y una categoría muchos juegos
+    @JoinTable(
+            name = "juego_categoria",
+            joinColumns = @JoinColumn(name = "juego_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
+    @Column(nullable = false)
     private List<Categoria> listCategorias;
 
+    @ManyToMany // Lo mismo para plataformas
+    @JoinTable(
+            name = "juego_plataforma",
+            joinColumns = @JoinColumn(name = "juego_id"),
+            inverseJoinColumns = @JoinColumn(name = "plataforma_id")
+    )
+    @Column(nullable = false)
     private List<Plataforma> listPlataformas;
 
 
     public Juego() { /* Hermano, constructo void */ }
 
 
-    public Juego(String nombre, String descripcion, double precio) {
+    public Juego(String nombre, String descripcion, double precio, List<Categoria> listCategorias, List<Plataforma> listPlataformas) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.listCategorias = listCategorias;
+        this.listPlataformas = listPlataformas;
     }
 
 
@@ -86,7 +105,7 @@ public class Juego {
         this.descripcion = descripcion;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 

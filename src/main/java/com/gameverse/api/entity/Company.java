@@ -2,6 +2,7 @@ package com.gameverse.api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,12 +21,17 @@ public class Company {
             nullable = false)
     private String nombre;
 
+
+    // Dentro de Company.java
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Juego> listJuegos;
 
     public Company() {}
 
     public Company(String nombre) {
         this.nombre = nombre;
+        this.listJuegos = new ArrayList<>();
     }
 
     public Long getId() {

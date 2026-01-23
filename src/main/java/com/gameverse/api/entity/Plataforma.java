@@ -2,6 +2,7 @@ package com.gameverse.api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class Plataforma {
     private String nombre;
 
     // Esto deriva en la Tabla Intermedia (TI2)
+    @ManyToMany(mappedBy = "listPlataformas")
     private List<Juego> listJuegos;
 
     // ========================== DESARROLLO CONSTRUCTORES ==========================
@@ -37,6 +39,7 @@ public class Plataforma {
 
     public Plataforma(String nombre) {
         this.nombre = nombre;
+        this.listJuegos = new ArrayList<>();
     }
 
     // ========================== DESARROLLO METODOS ==========================

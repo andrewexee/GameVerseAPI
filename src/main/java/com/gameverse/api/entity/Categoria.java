@@ -2,6 +2,7 @@ package com.gameverse.api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,8 @@ public class Categoria {
     private String nombre;
 
     // Esto deriva en la Tabla Intermedia (TI1)
-    private List<Juego> listJuegos;
+    @ManyToMany(mappedBy = "listCategorias")
+    private List<Juego> listJuegos ;
 
 
     public Categoria(){}
@@ -31,6 +33,10 @@ public class Categoria {
         this.nombre = nombre;
     }
 
+    public Categoria(String nombre, List<Juego> listJuegos) {
+        this.nombre = nombre;
+        this.listJuegos = listJuegos;
+    }
 
     public Long getId() {
         return this.id;
