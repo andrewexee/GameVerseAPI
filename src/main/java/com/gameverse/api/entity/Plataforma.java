@@ -2,6 +2,7 @@ package com.gameverse.api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +30,14 @@ public class Plataforma {
     private String nombre;
 
     // Esto deriva en la Tabla Intermedia (TI2)
-    private List<Juego> listJuegos;
+    @ManyToMany(mappedBy = "listPlataformas")
+    private List<Juego> listJuegos = new ArrayList<>();
 
     // ========================== DESARROLLO CONSTRUCTORES ==========================
 
-    public Plataforma() { /* Constructor vacío */ }
+    public Plataforma() {
+        // Constructor vacío requerido por JPA
+    }
 
     public Plataforma(String nombre) {
         this.nombre = nombre;
@@ -49,7 +53,7 @@ public class Plataforma {
         return this.nombre;
     }
 
-    public List getlistJuegos() {
+    public List<Juego> getListJuegos() {
         return this.listJuegos;
     }
 
@@ -57,7 +61,20 @@ public class Plataforma {
         this.nombre = nombre;
     }
 
-    public void setListJuegos(Juego juego){
+    public void addJuego(Juego juego) {
         this.listJuegos.add(juego);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Plataforma)) return false;
+        Plataforma other = (Plataforma) o;
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

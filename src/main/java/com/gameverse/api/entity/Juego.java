@@ -2,6 +2,7 @@ package com.gameverse.api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class Juego {
             nullable = false)
     private String nombre;
 
-    @Column
+    @Column(nullable = true)
     private String descripcion;
 
     @Column(nullable = false)
@@ -30,24 +31,51 @@ public class Juego {
     @JoinColumn(name ="id_company", referencedColumnName = "id")
     private Company company;
 
-    private List<Categoria> listCategorias;
+    // Dentro de Juego.java
 
-    private List<Plataforma> listPlataformas;
+    @ManyToMany // Un juego tiene muchas categorías, y una categoría muchos juegos
+    @JoinTable(
+            name = "juego_categoria",
+            joinColumns = @JoinColumn(name = "juego_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
+    @Column(nullable = false)
+    private List<Categoria> listCategorias = new ArrayList<>();
+
+    @ManyToMany // Lo mismo para plataformas
+    @JoinTable(
+            name = "juego_plataforma",
+            joinColumns = @JoinColumn(name = "juego_id"),
+            inverseJoinColumns = @JoinColumn(name = "plataforma_id")
+    )
+    @Column(nullable = false)
+    private List<Plataforma> listPlataformas = new ArrayList<>();
 
 
-    public Juego() { /* Hermano, constructo void */ }
+    public Juego() {
+        // Constructor vacío requerido por JPA
+    }
 
 
-    public Juego(String nombre, String descripcion, double precio) {
+    public Juego(String nombre, String descripcion, double precio, Company company,
+                 List<Categoria> listCategorias, List<Plataforma> listPlataformas) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.company = company;
+        if (listCategorias != null) {
+            this.listCategorias = listCategorias;
+        }
+        if (listPlataformas != null) {
+            this.listPlataformas = listPlataformas;
+        }
     }
 
 
     public Juego(String nombre, double precio) {
         this.nombre = nombre;
         this.precio = precio;
+        this.descripcion = null;
     }
 
     public Long getId(){
@@ -65,16 +93,16 @@ public class Juego {
     public double getPrecio() {
         return this.precio;
     }
-    
+
     public Long getIdCompany() {
         return this.company.getId();
     }
 
-    public List getListCategorias() {
+    public List<Categoria> getListCategorias() {
         return this.listCategorias;
     }
 
-    public List getListPlataformas() {
+    public List<Plataforma> getListPlataformas() {
         return this.listPlataformas;
     }
 
@@ -86,7 +114,7 @@ public class Juego {
         this.descripcion = descripcion;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
@@ -96,5 +124,11 @@ public class Juego {
 
     public void setListPlataformas(Plataforma plataforma) {
         this.listPlataformas.add(plataforma);
+    }
+    public void setCompany(Company company) {
+        this.company = company;
+        if (company != null && !company.getListJuegos().contains(this)) {
+            company.getListJuegos().add(this);
+        }
     }
 }
