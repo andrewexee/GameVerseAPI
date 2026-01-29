@@ -1,5 +1,6 @@
 package com.gameverse.api.controller;
 
+import com.gameverse.api.dto.JuegoEnriquecidoDTO;
 import com.gameverse.api.entity.Juego;
 import com.gameverse.api.service.JuegoService;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,10 @@ public class JuegoController {
     @PutMapping("/{id}")
     public Juego actualizar(@PathVariable Long id, @RequestBody Juego juego) {
         return juegoService.updateJuego(id, juego);
+    }
+
+    @GetMapping("/{id}/enriquecido")
+    public JuegoEnriquecidoDTO obtenerDetalleConPortada(@PathVariable Long id) {
+        return juegoService.getJuegoEnriquecido(id);
     }
 }
