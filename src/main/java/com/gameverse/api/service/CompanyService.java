@@ -1,6 +1,5 @@
 package com.gameverse.api.service;
 
-import com.gameverse.api.entity.Categoria;
 import com.gameverse.api.entity.Company;
 import com.gameverse.api.repository.CompanyRepository;
 import org.springframework.stereotype.Service;
